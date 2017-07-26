@@ -70,7 +70,7 @@ class Tiny_Nav_Menu_Cache {
 
     public function flush_all() {
 
-        foreach ( $this->get_keys() as $key ) {
+        foreach ( $this->get_all_keys() as $key ) {
             wp_cache_delete( $key, self::GROUP );
         }
         wp_cache_delete( 'key_list', self::GROUP );
@@ -89,7 +89,7 @@ class Tiny_Nav_Menu_Cache {
         wp_cache_set( 'key_list', $key_list, self::GROUP, DAY_IN_SECONDS );
     }
 
-    private function get_keys() {
+    private function get_all_keys() {
 
         $found = null;
         $key_list = wp_cache_get( 'key_list', self::GROUP, false, $found );
