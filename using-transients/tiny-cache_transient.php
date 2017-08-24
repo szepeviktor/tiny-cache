@@ -25,7 +25,7 @@ function the_content_cached( $more_link_text = null, $strip_teaser = false ) {
     }
 
     // @transient
-    $cached = get_transient( 'the_content:' . $post_id )
+    $cached = get_transient( 'the_content:' . $post_id );
     $found = ( false === $cached );
 
     // Cache hit
