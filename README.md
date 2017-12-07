@@ -8,7 +8,7 @@ How to achieve high performance in WordPress?
 
 | Item                          | Tool                               | Speedup                       |
 | ----------------------------- | ---------------------------------- | ----------------------------- |
-| Infrastructure                | CPU, disk, web server, PHP and DNS | Overall performance           |
+| Infrastructure                | CPU, disk, web server, PHP ([OPcache](http://php.net/manual/en/opcache.configuration.php#ini.opcache.validate-timestamps)) and DNS | Overall performance           |
 | In-memory object cache        | Redis, Memcached, APCu             | options, post, post meta etc. |
 | Server-side functionality plugins<br> (backup, db cleanup) | Use WP-CLI instead | **Degrades** performance |
 | Theme and plugins             | Cache-aware ones using object cache or transients |                |
@@ -53,10 +53,10 @@ Copy these to your theme's functions.php.
     }
 ```
 
-### Little sisters
+## Little sisters
 
-1. Tiny navigation menu cache
-1. Tiny translation cache
+1. Tiny **navigation menu** cache
+1. Tiny **translation** cache
 
 @TODO
 

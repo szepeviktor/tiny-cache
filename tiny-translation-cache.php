@@ -2,7 +2,7 @@
 /*
 Plugin name: Tiny translation cache (MU)
 Description: Cache .mo files in persistent object cache.
-Version: 0.1.2
+Version: 0.1.3
 Plugin URI: https://developer.wordpress.org/reference/functions/load_textdomain/
 */
 
@@ -37,10 +37,10 @@ class Tiny_Translation_Cache {
         do_action( 'load_textdomain', $domain, $mofile );
         $mofile = apply_filters( 'load_textdomain_mofile', $mofile, $domain );
 
-        $mo = new \MO();
-        $key = $this->get_key( $domain, $mofile );
+        $mo    = new \MO();
+        $key   = $this->get_key( $domain, $mofile );
         $found = null;
-        // @TODO unserilalize() and gzinflate( $ )
+        // @TODO Compress stored data unserialize() and gzinflate( $ )
         $cache = wp_cache_get( $key, self::GROUP, false, $found );
 
         if ( $found && isset( $cache['entries'], $cache['headers'] ) ) {
@@ -56,7 +56,7 @@ class Tiny_Translation_Cache {
                 'entries' => $mo->entries,
                 'headers' => $mo->headers,
             );
-            // @TODO serilalize() and gzdeflate( $, 6 )
+            // @TODO Compress stored data serilalize() and gzdeflate( $, 6 )
             // Save translation for a day
             wp_cache_set( $key, $translation, self::GROUP, DAY_IN_SECONDS );
         }
@@ -67,7 +67,7 @@ class Tiny_Translation_Cache {
         if ( array_key_exists( $domain, (array) $l10n ) ) {
             $mo->merge_with( $l10n[ $domain ] );
         }
-        $l10n[ $domain ] = &$mo;
+        $l10n[ $domain ] = &$mo; // WPCS: override ok.
 
         return true;
     }
@@ -81,7 +81,7 @@ class Tiny_Translation_Cache {
 
     private function exit_with_instructions() {
 
-        $doc_root = array_key_exists( 'DOCUMENT_ROOT', $_SERVER ) ? $_SERVER['DOCUMENT_ROOT'] : ABSPATH;
+        $doc_root = isset( $_SERVER['DOCUMENT_ROOT'] ) ? $_SERVER['DOCUMENT_ROOT'] : ABSPATH; // WPCS: input var, sanitization ok.
 
         $iframe_msg = sprintf( '
 <p style="font:14px \'Open Sans\',sans-serif">
@@ -93,7 +93,7 @@ must be copied to <code style="font-family:Consolas,Monaco,monospace;background:
             esc_html( str_replace( $doc_root, '', trailingslashit( WPMU_PLUGIN_DIR ) ) . basename( __FILE__ ) )
         );
 
-        exit( $iframe_msg );
+        exit( $iframe_msg ); // WPCS: XSS ok.
     }
 }
 

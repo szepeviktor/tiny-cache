@@ -2,7 +2,7 @@
 /*
 Plugin Name: Tiny navigation menu cache (MU)
 Description: Cache nav menu's HTML content in persistent object cache.
-Version: 0.1.2
+Version: 0.1.3
 Constants: TINY_CACHE_NAV_MENU_EXCLUDES
 */
 
@@ -29,9 +29,9 @@ class Tiny_Nav_Menu_Cache {
         add_action( 'split_shared_term', array( $this, 'flush_all' ) );
 
         // Learned from W3TC Page Cache rules and WP Super Cache rules
-        if ( is_user_logged_in() // User is logged in
-            || ! ( isset( $_SERVER['REQUEST_METHOD'] ) && 'GET' === $_SERVER['REQUEST_METHOD'] ) // Not a GET request
-            || ( defined( 'DONOTCACHEPAGE' ) && DONOTCACHEPAGE ) // DO-NOT-CACHE tag present
+        if ( is_user_logged_in() /* User is logged in */
+            || ! ( isset( $_SERVER['REQUEST_METHOD'] ) && 'GET' === $_SERVER['REQUEST_METHOD'] ) /* Not a GET request */ // WPCS: input var OK.
+            || ( defined( 'DONOTCACHEPAGE' ) && DONOTCACHEPAGE ) /* DO-NOT-CACHE tag present */
         ) {
             return;
         }
@@ -79,7 +79,7 @@ class Tiny_Nav_Menu_Cache {
     private function remember_key( $key ) {
 
         // @TODO Not atomic
-        $found = null;
+        $found    = null;
         $key_list = wp_cache_get( 'key_list', self::GROUP, false, $found );
         if ( $found ) {
             $key_list .= '|' . $key;
@@ -91,7 +91,7 @@ class Tiny_Nav_Menu_Cache {
 
     private function get_all_keys() {
 
-        $found = null;
+        $found    = null;
         $key_list = wp_cache_get( 'key_list', self::GROUP, false, $found );
         if ( ! $found ) {
             $key_list = '';
@@ -108,13 +108,17 @@ class Tiny_Nav_Menu_Cache {
 
             if ( property_exists( $args, 'theme_location' )
                 && ! empty( $args->theme_location )
-                && in_array( $args->theme_location, $excludes )
+                && in_array( $args->theme_location, $excludes, true )
             ) {
                 return false;
             }
         }
 
-        return md5( serialize( $args ) . $_SERVER['REQUEST_URI'] );
+        $request_uri = isset( $_SERVER['REQUEST_URI'] )
+            ? $_SERVER['REQUEST_URI']
+            : ''; // WPCS: sanitization, input var OK.
+
+        return md5( wp_json_encode( $args ) . $request_uri );
     }
 }
 
