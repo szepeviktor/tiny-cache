@@ -8,7 +8,7 @@ How to achieve high performance in WordPress?
 
 | Item                          | Tool                               | Speedup                       |
 | ----------------------------- | ---------------------------------- | ----------------------------- |
-| Infrastructure                | CPU, disk, web server, PHP ([OPcache](http://php.net/manual/en/opcache.configuration.php#ini.opcache.validate-timestamps)) and DNS | Overall performance           |
+| [Infrastructure](https://github.com/szepeviktor/debian-server-tools/blob/master/CV-WordPress.md#webserver-stack) | CPU, disk, web server, PHP ([OPcache](http://php.net/manual/en/opcache.configuration.php#ini.opcache.validate-timestamps)) and DNS | Overall performance |
 | In-memory object cache        | Redis, Memcached, APCu             | options, post, post meta etc. |
 | Server-side functionality plugins<br> (backup, db cleanup) | Use WP-CLI instead | **Degrades** performance |
 | Theme and plugins             | Cache-aware ones using object cache or transients |                |
@@ -16,6 +16,8 @@ How to achieve high performance in WordPress?
 | Navigation menus              | `tiny-nav-menu-cache`              | `wp_nav_menu()`               |
 | Post content                  | `tiny-cache`                       | `the_content()`               |
 | Widgets                       | `widget-output-cache` plugin       | `dynamic_sidebar()`           |
+
+This list concentrates on WordPress core generating HTML code. Frontend loading is another topic.
 
 ### Usage
 
@@ -63,3 +65,7 @@ Copy these to your theme's functions.php.
 1. Document mu-cache-flush-button mu-cache-flush-on-maintenance mu-cache-flush-post-button
 1. Support groups: `wp_cache_add_global_groups( 'the_content' );` and `WP_REDIS_USE_CACHE_GROUPS`
 1. Add `$more_link_text` and `$strip_teaser hash` to cache key
+
+## Alternative
+
+https://github.com/Rarst/fragment-cache
