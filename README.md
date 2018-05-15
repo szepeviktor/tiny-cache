@@ -2,6 +2,8 @@
 
 Cache post content, translations and nav menu output in persistent object cache.
 
+This MU plugin works well in **production** providing you understand its source code (133 sloc).
+
 ### WordPress performance
 
 How to achieve high performance in WordPress?
@@ -17,7 +19,7 @@ How to achieve high performance in WordPress?
 | Post content                  | `tiny-cache`                       | `the_content()`               |
 | Widgets                       | `widget-output-cache` plugin       | `dynamic_sidebar()`           |
 
-This list concentrates on WordPress core generating HTML code. Frontend loading is another topic.
+This list concentrates on WordPress core generating HTML code. Frontend loading (full page cache) is another topic.
 
 ### Usage
 
@@ -36,7 +38,7 @@ find -type f -name "*.php" | xargs -r -L 1 sed -i -e 's|\bthe_content();|the_con
 - `wp_suspend_cache_addition( true );`
 - `define( 'DONOTCACHEPAGE', true );`
 
-### Missing plugin
+### Prevent missing plugin
 
 Protection against plugin deactivation.
 
@@ -57,14 +59,8 @@ Copy these to your theme's functions.php.
 
 ## Little sisters
 
-1. Tiny **navigation menu** cache
-1. Tiny **translation** cache
-
-@TODO
-
-1. Document mu-cache-flush-button mu-cache-flush-on-maintenance mu-cache-flush-post-button
-1. Support groups: `wp_cache_add_global_groups( 'the_content' );` and `WP_REDIS_USE_CACHE_GROUPS`
-1. Add `$more_link_text` and `$strip_teaser hash` to cache key
+1. Tiny **navigation menu** cache - for nav menu output
+1. Tiny **translation** cache - for translations (.mo files)
 
 ## Alternative
 
