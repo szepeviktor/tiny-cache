@@ -25,7 +25,7 @@ This list concentrates on WordPress core generating HTML code. Frontend loading 
 
 Of course you need **persistent** object cache. Consider Redis server and `wp-redis` plugin.
 
-Replace `the_content();` instances in your theme.
+Replace `the_content()` calls in your theme.
 
 **NOTICE** Replace only argument-less calls! `$more_link_text` and `$strip_teaser` are not supported.
 
