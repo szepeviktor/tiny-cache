@@ -1,10 +1,10 @@
 <?php
-/*
-Plugin Name: Tiny navigation menu cache (MU)
-Description: Cache nav menu's HTML content in persistent object cache.
-Version: 0.1.3
-Constants: TINY_CACHE_NAV_MENU_EXCLUDES
-*/
+/**
+ * Plugin Name: Tiny navigation menu cache (MU)
+ * Description: Cache nav menu's HTML content in persistent object cache.
+ * Version:     0.1.3
+ * Constants:   TINY_CACHE_NAV_MENU_EXCLUDES
+ */
 
 class Tiny_Nav_Menu_Cache {
 

@@ -1,0 +1,17 @@
+#$ composer require --update-no-dev giacocorsiglia/wordpress-stubs
+#$ phpstan analyze
+parameters:
+    level: max
+    paths:
+        - %currentWorkingDirectory%/tiny-cache.php
+        - %currentWorkingDirectory%/tiny-nav-menu-cache.php
+        - %currentWorkingDirectory%/tiny-translation-cache.php
+    autoload_files:
+        - %currentWorkingDirectory%/vendor/giacocorsiglia/wordpress-stubs/wordpress-stubs.php
+        - %currentWorkingDirectory%/test/phpstan-bootstrap.php
+        - %currentWorkingDirectory%/tiny-cache.php
+        - %currentWorkingDirectory%/tiny-nav-menu-cache.php
+        - %currentWorkingDirectory%/tiny-translation-cache.php
+    ignoreErrors:
+        - '#^Function do_action invoked with [345] parameters, 1-2 required\.$#'
+        - '#^Function apply_filters invoked with [345] parameters, 2 required\.$#'

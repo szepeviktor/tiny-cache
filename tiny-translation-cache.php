@@ -1,10 +1,10 @@
 <?php
-/*
-Plugin name: Tiny translation cache (MU)
-Description: Cache .mo files in persistent object cache.
-Version: 0.1.3
-Plugin URI: https://developer.wordpress.org/reference/functions/load_textdomain/
-*/
+/**
+ * Plugin Name: Tiny translation cache (MU)
+ * Description: Cache .mo files in persistent object cache.
+ * Version:     0.1.3
+ * Plugin URI:  https://developer.wordpress.org/reference/functions/load_textdomain/
+ */
 
 class Tiny_Translation_Cache {
 
