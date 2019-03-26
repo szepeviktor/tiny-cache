@@ -17,6 +17,7 @@ How to achieve high performance in WordPress?
 | Translations                  | `tiny-translation-cache`           | .mo file parsing              |
 | Navigation menus              | `tiny-nav-menu-cache`              | `wp_nav_menu()`               |
 | Post content                  | `tiny-cache`                       | `the_content()`               |
+| Template output               | `tiny-cache`                       | `get_template_part()`         |
 | Widgets                       | `widget-output-cache` plugin       | `dynamic_sidebar()`           |
 
 This list concentrates on WordPress core generating HTML code. Frontend loading (full page cache) is another topic.
@@ -53,6 +54,11 @@ Copy these to your theme's functions.php.
     if ( ! function_exists( 'get_the_content_cached' ) ) {
         function get_the_content_cached( $more_link_text = null, $strip_teaser = false ) {
             return get_the_content( $more_link_text, $strip_teaser );
+        }
+    }
+    if ( ! function_exists( 'get_template_part_cached' ) ) {
+        function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
+            get_template_part( $slug, $name );
         }
     }
 ```

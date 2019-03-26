@@ -143,6 +143,59 @@ function tiny_cache_save_the_content( $content ) {
 }
 
 /**
+ * Display a template part.
+ *
+ * @param string $slug
+ * @param string $name
+ * @param string $version_hash
+ */
+function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
+
+    // The default version is the current post ID.
+    if ( '' === $version_hash ) {
+        $version_hash = get_the_ID();
+        if ( false === $$version_hash /* Not possible to tie content to post ID. */
+            || tiny_cache_skip_cache()
+        ) {
+            get_template_part( $slug, $name );
+            return;
+        }
+    }
+
+    $name = (string) $name;
+    if ( '' !== $name ) {
+        $name = '-' . $name;
+    }
+
+    $key = sprintf( '%s%s:%s', $slug, $name, $version_hash );
+
+    $found  = null;
+    $cached = wp_cache_get( $key, 'template_part', false, $found );
+
+    // Cache hit.
+    if ( $found ) {
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        print $cached;
+
+        return;
+    }
+
+    // Cache miss.
+    ob_start();
+    get_template_part( $slug, $name );
+    $output = ob_get_contents();
+    ob_end_clean();
+
+    // Save and print the template part.
+    $timestamp = gmdate( 'c' );
+    $message   = sprintf( '<!-- Cached @%s -->', esc_html( $timestamp ) );
+    $template  = $output . $message;
+    wp_cache_add( $key, $template, 'template_part', HOUR_IN_SECONDS );
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    print $template;
+}
+
+/**
  * Delete cached content by ID.
  *
  * @param int $post_id
