@@ -5,7 +5,7 @@
  * @wordpress-plugin
  * Plugin name: Tiny cache (MU)
  * Description: Cache post content in persistent object cache for 1 day.
- * Version:     0.7.0
+ * Version:     0.8.0
  * Plugin URI:  https://developer.wordpress.org/reference/functions/the_content/
  */
 
@@ -154,7 +154,7 @@ function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
     // The default version is the current post ID.
     if ( '' === $version_hash ) {
         $version_hash = get_the_ID();
-        if ( false === $$version_hash /* Not possible to tie content to post ID. */
+        if ( false === $version_hash /* Not possible to tie content to post ID. */
             || tiny_cache_skip_cache()
         ) {
             get_template_part( $slug, $name );
@@ -162,12 +162,11 @@ function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
         }
     }
 
-    $name = (string) $name;
-    if ( '' !== $name ) {
-        $name = '-' . $name;
+    $file_suffix = (string) $name;
+    if ( '' !== $file_suffix ) {
+        $file_suffix = '-' . $file_suffix;
     }
-
-    $key = sprintf( '%s%s:%s', $slug, $name, $version_hash );
+    $key = sprintf( '%s%s:%s', $slug, $file_suffix, $version_hash );
 
     $found  = null;
     $cached = wp_cache_get( $key, 'template_part', false, $found );
