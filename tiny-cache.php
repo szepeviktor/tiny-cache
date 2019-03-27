@@ -154,12 +154,13 @@ function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
     // The default version is the current post ID.
     if ( '' === $version_hash ) {
         $version_hash = get_the_ID();
-        if ( false === $version_hash /* Not possible to tie content to post ID. */
-            || tiny_cache_skip_cache()
-        ) {
-            get_template_part( $slug, $name );
-            return;
-        }
+    }
+
+    if ( false === $version_hash /* Not possible to tie content to post ID. */
+        || tiny_cache_skip_cache()
+    ) {
+        get_template_part( $slug, $name );
+        return;
     }
 
     $file_suffix = (string) $name;
