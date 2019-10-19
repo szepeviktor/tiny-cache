@@ -1,5 +1,6 @@
-#$ composer require --update-no-dev giacocorsiglia/wordpress-stubs
-#$ phpstan analyze
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
     level: max
     paths:
@@ -7,8 +8,6 @@ parameters:
         - %currentWorkingDirectory%/tiny-nav-menu-cache.php
         - %currentWorkingDirectory%/tiny-translation-cache.php
     autoload_files:
-        - %currentWorkingDirectory%/vendor/giacocorsiglia/wordpress-stubs/wordpress-stubs.php
-        - %currentWorkingDirectory%/test/phpstan-bootstrap.php
         - %currentWorkingDirectory%/tiny-cache.php
         - %currentWorkingDirectory%/tiny-nav-menu-cache.php
         - %currentWorkingDirectory%/tiny-translation-cache.php

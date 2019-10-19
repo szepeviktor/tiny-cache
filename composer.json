@@ -1,0 +1,17 @@
+{
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^2.1.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+        "szepeviktor/phpstan-wordpress": "^0.2.0",
+        "phpstan/phpstan-shim": "^0.11.16",
+        "php-stubs/wordpress-stubs": "^4.9"
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs",
+        "phpstan": "vendor/bin/phpstan analyze",
+        "test": [
+            "@phpcs",
+            "@phpstan"
+        ]
+    }
+}
