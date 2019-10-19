@@ -2,13 +2,33 @@
 /**
  * Plugin Name: Tiny navigation menu cache (MU)
  * Description: Cache nav menu's HTML content in persistent object cache.
- * Version:     0.1.3
+ * Version:     0.2.0
  * Constants:   TINY_CACHE_NAV_MENU_EXCLUDES
  */
 
 class Tiny_Nav_Menu_Cache {
 
-    const GROUP = 'navmenu';
+    /**
+     * @var string Name of the cache group.
+     */
+    private const GROUP = 'navmenu';
+
+    /**
+     * @var array List of whitelisted query string fields (these do not prevent cache write).
+     */
+    private const WHITELISTED_QUERY_STRING_FIELDS = [
+        // https://support.google.com/searchads/answer/7342044
+        'gclid',
+        'gclsrc',
+        // https://www.facebook.com/business/help/330994334179410 "URL in ad can't contain Facebook Click ID" section
+        'fbclid',
+        // https://en.wikipedia.org/wiki/UTM_parameters
+        'utm_campaign',
+        'utm_content',
+        'utm_medium',
+        'utm_source',
+        'utm_term',
+    ];
 
     public function __construct() {
 
@@ -40,32 +60,41 @@ class Tiny_Nav_Menu_Cache {
         add_filter( 'wp_nav_menu', array( $this, 'save_nav_menu' ), PHP_INT_MAX, 2 );
     }
 
-    public function get_nav_menu( $nav_menu, $args ) {
+    /**
+     * @param string $nav_menu_html
+     * @param object $args
+     * @return string
+     */
+    public function get_nav_menu( $nav_menu_html, $args ) {
 
-        $key = $this->get_cache_key( $args );
-        // Check excluded nav menus
-        if ( false !== $key ) {
+        $enabled = $this->is_enabled( $args );
+        if ( $enabled ) {
             $found = null;
-            $cache = wp_cache_get( $key, self::GROUP, false, $found );
+            $cache = wp_cache_get( $this->get_cache_key( $args ), self::GROUP, false, $found );
             if ( $found ) {
 
                 return $cache;
             }
         }
 
-        return $nav_menu;
+        return $nav_menu_html;
     }
 
-    public function save_nav_menu( $nav_menu, $args ) {
+    /**
+     * @param string $nav_menu_html
+     * @param object $args
+     * @return string
+     */
+    public function save_nav_menu( $nav_menu_html, $args ) {
 
-        $key = $this->get_cache_key( $args );
-        // Check excluded nav menus
-        if ( false !== $key ) {
-            wp_cache_set( $key, $nav_menu, self::GROUP, DAY_IN_SECONDS );
+        $enabled = $this->is_enabled( $args );
+        if ( $enabled ) {
+            $key = $this->get_cache_key( $args );
+            wp_cache_set( $key, $nav_menu_html, self::GROUP, DAY_IN_SECONDS );
             $this->remember_key( $key );
         }
 
-        return $nav_menu;
+        return $nav_menu_html;
     }
 
     public function flush_all() {
@@ -76,6 +105,9 @@ class Tiny_Nav_Menu_Cache {
         wp_cache_delete( 'key_list', self::GROUP );
     }
 
+    /**
+     * @param string $key
+     */
     private function remember_key( $key ) {
 
         // @TODO Not atomic
@@ -89,6 +121,9 @@ class Tiny_Nav_Menu_Cache {
         wp_cache_set( 'key_list', $key_list, self::GROUP, DAY_IN_SECONDS );
     }
 
+    /**
+     * @return array
+     */
     private function get_all_keys() {
 
         $found    = null;
@@ -100,9 +135,15 @@ class Tiny_Nav_Menu_Cache {
         return explode( '|', $key_list );
     }
 
-    private function get_cache_key( $args ) {
+    /**
+     * Check excluded nav menus and the query string.
+     *
+     * @param object $args
+     * @return bool
+     */
+    private function is_enabled( $args ) {
 
-        // Excluded theme locations
+        // Excluded theme locations.
         if ( defined( 'TINY_CACHE_NAV_MENU_EXCLUDES' ) && TINY_CACHE_NAV_MENU_EXCLUDES ) {
             $excludes = explode( '|', TINY_CACHE_NAV_MENU_EXCLUDES );
 
@@ -113,6 +154,21 @@ class Tiny_Nav_Menu_Cache {
                 return false;
             }
         }
+
+        // Do not cache requests with query string except whitelisted ones.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( [] !== array_diff( array_keys( $_GET ), self::WHITELISTED_QUERY_STRING_FIELDS ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param object $args
+     * @return string
+     */
+    private function get_cache_key( $args ) {
 
         $request_uri = isset( $_SERVER['REQUEST_URI'] )
             ? $_SERVER['REQUEST_URI']
