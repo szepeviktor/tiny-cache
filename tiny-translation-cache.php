@@ -67,7 +67,8 @@ class Tiny_Translation_Cache {
         if ( array_key_exists( $domain, (array) $l10n ) ) {
             $mo->merge_with( $l10n[ $domain ] );
         }
-        $l10n[ $domain ] = &$mo; // WPCS: override ok.
+        // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+        $l10n[ $domain ] = &$mo;
 
         return true;
     }
@@ -83,8 +84,8 @@ class Tiny_Translation_Cache {
 
         $doc_root = isset( $_SERVER['DOCUMENT_ROOT'] ) ? $_SERVER['DOCUMENT_ROOT'] : ABSPATH; // WPCS: input var, sanitization ok.
 
-        $iframe_msg = sprintf( '
-<p style="font:14px \'Open Sans\',sans-serif">
+        $iframe_msg = sprintf(
+            '<p style="font:14px \'Open Sans\',sans-serif">
 <strong style="color:#DD3D36">ERROR:</strong> This is <em>not</em> a normal plugin,
 and it should not be activated as one.<br />
 Instead, <code style="font-family:Consolas,Monaco,monospace;background:rgba(0,0,0,0.07)">%s</code>
@@ -93,7 +94,8 @@ must be copied to <code style="font-family:Consolas,Monaco,monospace;background:
             esc_html( str_replace( $doc_root, '', trailingslashit( WPMU_PLUGIN_DIR ) ) . basename( __FILE__ ) )
         );
 
-        exit( $iframe_msg ); // WPCS: XSS ok.
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        exit( $iframe_msg );
     }
 }
 
