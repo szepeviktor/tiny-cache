@@ -176,7 +176,7 @@ class Tiny_Nav_Menu_Cache {
             ? $_SERVER['REQUEST_URI']
             : ''; // WPCS: sanitization, input var OK.
 
-        return md5( wp_json_encode( $args ) . $request_uri );
+        return md5( "nav_menu-".$args->menu_id . $request_uri );
     }
 }
 
