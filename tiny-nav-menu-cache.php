@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Tiny navigation menu cache (MU)
  * Description: Cache nav menu's HTML content in persistent object cache.
- * Version:     0.2.0
+ * Version:     0.2.1
  * Constants:   TINY_CACHE_NAV_MENU_EXCLUDES
  */
 
@@ -67,8 +67,7 @@ class Tiny_Nav_Menu_Cache {
      */
     public function get_nav_menu( $nav_menu_html, $args ) {
 
-        $enabled = $this->is_enabled( $args );
-        if ( $enabled ) {
+        if ( $this->is_enabled( $args ) ) {
             $found = null;
             $cache = wp_cache_get( $this->get_cache_key( $args ), self::GROUP, false, $found );
             if ( $found ) {
@@ -87,8 +86,7 @@ class Tiny_Nav_Menu_Cache {
      */
     public function save_nav_menu( $nav_menu_html, $args ) {
 
-        $enabled = $this->is_enabled( $args );
-        if ( $enabled ) {
+        if ( $this->is_enabled( $args ) ) {
             $key = $this->get_cache_key( $args );
             wp_cache_set( $key, $nav_menu_html, self::GROUP, DAY_IN_SECONDS );
             $this->remember_key( $key );
@@ -111,13 +109,10 @@ class Tiny_Nav_Menu_Cache {
     private function remember_key( $key ) {
 
         // @TODO Not atomic
-        $found    = null;
+        $found    = false;
         $key_list = wp_cache_get( 'key_list', self::GROUP, false, $found );
-        if ( $found ) {
-            $key_list .= '|' . $key;
-        } else {
-            $key_list = $key;
-        }
+
+        $key_list = $found ? $key_list . '|' . $key : $key;
         wp_cache_set( 'key_list', $key_list, self::GROUP, DAY_IN_SECONDS );
     }
 

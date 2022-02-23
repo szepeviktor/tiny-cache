@@ -45,7 +45,7 @@ function the_content_cached( $more_link_text = null, $strip_teaser = false ) {
         return;
     }
 
-    $found  = null;
+    $found  = false;
     $cached = wp_cache_get( $post_id, 'the_content', false, $found );
 
     // Cache hit.
@@ -169,7 +169,7 @@ function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
     }
     $key = sprintf( '%s%s:%s', $slug, $file_suffix, $version_hash );
 
-    $found  = null;
+    $found  = false;
     $cached = wp_cache_get( $key, 'template_part', false, $found );
 
     // Cache hit.
