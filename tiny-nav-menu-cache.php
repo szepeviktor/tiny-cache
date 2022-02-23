@@ -28,6 +28,8 @@ class Tiny_Nav_Menu_Cache {
         'utm_medium',
         'utm_source',
         'utm_term',
+        'XDEBUG_TRIGGER',
+        'do_xhprof_profile',
     ];
 
     public function __construct() {
