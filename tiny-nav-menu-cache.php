@@ -42,6 +42,11 @@ class Tiny_Nav_Menu_Cache {
             return;
         }
 
+        $this->whitelisted_query_string_fields = apply_filters(
+            'tiny_nav_menu_cache/whitelisted_query_string_fields',
+            self::WHITELISTED_QUERY_STRING_FIELDS
+        );
+
         add_action( 'save_post', array( $this, 'flush_all' ) );
         add_action( 'wp_create_nav_menu', array( $this, 'flush_all' ) );
         add_action( 'wp_update_nav_menu', array( $this, 'flush_all' ) );
@@ -157,7 +162,7 @@ class Tiny_Nav_Menu_Cache {
 
         // Do not cache requests with query string except whitelisted ones.
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( [] !== array_diff( array_keys( $_GET ), self::WHITELISTED_QUERY_STRING_FIELDS ) ) {
+        if ( [] !== array_diff( array_keys( $_GET ), $this->whitelisted_query_string_fields ) ) {
             return false;
         }
 
