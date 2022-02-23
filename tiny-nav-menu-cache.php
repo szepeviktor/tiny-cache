@@ -16,7 +16,7 @@ class Tiny_Nav_Menu_Cache {
     /**
      * @var array List of whitelisted query string fields (these do not prevent cache write).
      */
-    private const WHITELISTED_QUERY_STRING_FIELDS = [
+    private $whitelisted_query_string_fields = [
         // https://support.google.com/searchads/answer/7342044
         'gclid',
         'gclsrc',
@@ -28,8 +28,6 @@ class Tiny_Nav_Menu_Cache {
         'utm_medium',
         'utm_source',
         'utm_term',
-        'XDEBUG_TRIGGER',
-        'do_xhprof_profile',
     ];
 
     public function __construct() {
@@ -57,6 +55,16 @@ class Tiny_Nav_Menu_Cache {
             return;
         }
 
+	// Add user-defined query parameters to the whitelist. Define the parameters you
+	// want whitelisted in wp-config in the following way:
+	//
+	// define('TINY_NAV_CACHE_WHITELIST_QUERY_STRING_FIELDS', 'XDEBUG_TRIGGER, do_xhprof_profile');
+
+	if ( defined( 'TINY_NAV_CACHE_WHITELIST_QUERY_STRING_FIELDS' ) ) {
+		$fields = explode( ',', TINY_NAV_CACHE_WHITELIST_QUERY_STRING_FIELDS);
+		$this->whitelisted_query_string_fields = array_merge( $this->whitelisted_query_string_fields, $fields );
+	}
+
         add_filter( 'pre_wp_nav_menu', array( $this, 'get_nav_menu' ), 30, 2 );
         add_filter( 'wp_nav_menu', array( $this, 'save_nav_menu' ), PHP_INT_MAX, 2 );
     }
@@ -73,7 +81,6 @@ class Tiny_Nav_Menu_Cache {
             $found = null;
             $cache = wp_cache_get( $this->get_cache_key( $args ), self::GROUP, false, $found );
             if ( $found ) {
-
                 return $cache;
             }
         }
@@ -158,7 +165,7 @@ class Tiny_Nav_Menu_Cache {
 
         // Do not cache requests with query string except whitelisted ones.
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( [] !== array_diff( array_keys( $_GET ), self::WHITELISTED_QUERY_STRING_FIELDS ) ) {
+        if ( [] !== array_diff( array_keys( $_GET ), $this->whitelisted_query_string_fields) ) {
             return false;
         }
 
