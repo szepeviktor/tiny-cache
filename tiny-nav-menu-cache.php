@@ -30,6 +30,11 @@ class Tiny_Nav_Menu_Cache {
         'utm_term',
     ];
 
+    /**
+     * @var array<string>
+     */
+    private whitelisted_query_string_fields = [];
+
     public function __construct() {
 
         add_action( 'init', array( $this, 'init' ) );
