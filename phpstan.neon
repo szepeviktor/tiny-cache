@@ -1,16 +1,16 @@
 includes:
-    - phar://phpstan.phar/conf/bleedingEdge.neon
     - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
     level: max
     paths:
-        - %currentWorkingDirectory%/tiny-cache.php
-        - %currentWorkingDirectory%/tiny-nav-menu-cache.php
-        - %currentWorkingDirectory%/tiny-translation-cache.php
-    autoload_files:
-        - %currentWorkingDirectory%/tiny-cache.php
-        - %currentWorkingDirectory%/tiny-nav-menu-cache.php
-        - %currentWorkingDirectory%/tiny-translation-cache.php
+        - tiny-cache.php
+        - tiny-nav-menu-cache.php
+        - tiny-translation-cache.php
     ignoreErrors:
-        - '#^Function do_action invoked with [345] parameters, 1-2 required\.$#'
+#        - '#^Function do_action invoked with [345] parameters, 1-2 required\.$#'
         - '#^Function apply_filters invoked with [345] parameters, 2 required\.$#'
+        -
+            path: tiny-nav-menu-cache.php
+            message: '#^Access to an undefined property object::\$menu_id\.$#'
+            count: 1
+

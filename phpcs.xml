@@ -19,16 +19,12 @@
         </properties>
     </rule>
     <rule ref="WordPress-Core">
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+        <exclude name="Generic.Formatting.MultipleStatementAlignment"/>
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
     </rule>
-    <!-- <rule ref="WordPress-Docs"/> -->
-    <rule ref="WordPress-Extra"/>
-
 <!--
-    <rule ref="WordPress.PHP.DiscouragedPHPFunctions">
-        <properties>
-            <property name="exclude" value="obfuscation"/>
-        </properties>
-    </rule>
+    <rule ref="WordPress-Docs"/>
 -->
+    <rule ref="WordPress-Extra"/>
 </ruleset>
