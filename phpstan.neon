@@ -7,8 +7,8 @@ parameters:
         - tiny-nav-menu-cache.php
         - tiny-translation-cache.php
     ignoreErrors:
-#        - '#^Function do_action invoked with [345] parameters, 1-2 required\.$#'
         - '#^Function apply_filters invoked with [345] parameters, 2 required\.$#'
+        - '#^Function do_action invoked with [345] parameters, 1-2 required\.$#'
         -
             path: tiny-nav-menu-cache.php
             message: '#^Access to an undefined property object::\$menu_id\.$#'

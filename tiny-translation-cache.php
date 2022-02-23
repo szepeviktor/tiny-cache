@@ -26,11 +26,20 @@ class Tiny_Translation_Cache {
         add_action( 'muplugins_loaded', array( $this, 'init' ) );
     }
 
+    /**
+     * @return void
+     */
     public function init() {
 
         add_filter( 'override_load_textdomain', array( $this, 'load_textdomain' ), 30, 3 );
     }
 
+    /**
+     * @param bool $override
+     * @param string $domain
+     * @param string $mofile
+     * @return bool
+     */
     public function load_textdomain( $override, $domain, $mofile ) {
 
         // Copied from core
@@ -39,8 +48,9 @@ class Tiny_Translation_Cache {
 
         $mo    = new \MO();
         $key   = $this->get_key( $domain, $mofile );
-        $found = null;
+        $found = false;
         // @TODO Compress stored data unserialize() and gzinflate( $ )
+        /** @var array{entries?: string, headers?: array<mixed>} $cache */
         $cache = wp_cache_get( $key, self::GROUP, false, $found );
 
         if ( $found && isset( $cache['entries'], $cache['headers'] ) ) {
@@ -73,6 +83,11 @@ class Tiny_Translation_Cache {
         return true;
     }
 
+    /**
+     * @param string $domain
+     * @param string $mofile
+     * @return string
+     */
     private function get_key( $domain, $mofile ) {
 
         // @FIXME Why do we need text domain? Isn't the full path exact enough?
@@ -80,6 +95,9 @@ class Tiny_Translation_Cache {
         return md5( $domain . $mofile );
     }
 
+    /**
+     * @return void
+     */
     private function exit_with_instructions() {
 
         $doc_root = isset( $_SERVER['DOCUMENT_ROOT'] ) ? $_SERVER['DOCUMENT_ROOT'] : ABSPATH; // WPCS: input var, sanitization ok.

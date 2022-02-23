@@ -32,6 +32,7 @@ function tiny_cache_skip_cache() {
  *
  * @param string $more_link_text
  * @param bool   $strip_teaser
+ * @return void
  */
 function the_content_cached( $more_link_text = null, $strip_teaser = false ) {
 
@@ -50,6 +51,7 @@ function the_content_cached( $more_link_text = null, $strip_teaser = false ) {
 
     // Cache hit.
     if ( $found ) {
+        /** @var string $cached */
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         print $cached;
 
@@ -81,6 +83,7 @@ function the_content_cached( $more_link_text = null, $strip_teaser = false ) {
  *
  * @param string $more_link_text
  * @param bool   $strip_teaser
+ * @return string
  */
 function get_the_content_cached( $more_link_text = null, $strip_teaser = false ) {
 
@@ -97,6 +100,7 @@ function get_the_content_cached( $more_link_text = null, $strip_teaser = false )
 
     // Cache hit.
     if ( $found ) {
+        /** @var string $cached */
         return $cached;
     }
 
@@ -148,6 +152,7 @@ function tiny_cache_save_the_content( $content ) {
  * @param string $slug
  * @param string $name
  * @param string $version_hash
+ * @return void
  */
 function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
 
@@ -174,6 +179,7 @@ function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
 
     // Cache hit.
     if ( $found ) {
+        /** @var string $cached */
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         print $cached;
 
@@ -199,6 +205,7 @@ function get_template_part_cached( $slug, $name = null, $version_hash = '' ) {
  * Delete cached content by ID.
  *
  * @param int $post_id
+ * @return void
  */
 function tiny_cache_delete_the_content( $post_id ) {
 
@@ -211,6 +218,7 @@ function tiny_cache_delete_the_content( $post_id ) {
  * @param string   $new_status
  * @param string   $old_status
  * @param \WP_Post $post
+ * @return void
  */
 function tiny_cache_post_transition( $new_status, $old_status, $post ) {
 
@@ -224,6 +232,8 @@ function tiny_cache_post_transition( $new_status, $old_status, $post ) {
 
 /**
  * Hook cache delete actions.
+ *
+ * @return void
  */
 function tiny_cache_actions() {
 
