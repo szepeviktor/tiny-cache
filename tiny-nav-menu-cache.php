@@ -61,7 +61,7 @@ class Tiny_Nav_Menu_Cache {
 	// define('TINY_NAV_CACHE_WHITELIST_QUERY_STRING_FIELDS', 'XDEBUG_TRIGGER, do_xhprof_profile');
 
 	if ( defined( 'TINY_NAV_CACHE_WHITELIST_QUERY_STRING_FIELDS' ) ) {
-		$fields = explode( ',', TINY_NAV_CACHE_WHITELIST_QUERY_STRING_FIELDS);
+		$fields = array_map( 'trim', explode( ',', TINY_NAV_CACHE_WHITELIST_QUERY_STRING_FIELDS) );
 		$this->whitelisted_query_string_fields = array_merge( $this->whitelisted_query_string_fields, $fields );
 	}
 
